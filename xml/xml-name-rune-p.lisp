@@ -173,7 +173,7 @@
 	      (SETF RUNE (RUNE-CODE RUNE))
 	      (LOCALLY (DECLARE (OPTIMIZE (SAFETY 0) (SPEED 3))
 				(type fixnum rune))
-		(AND (<= 0 RUNE ,+MAX+)
+		(AND (<= 0 RUNE ,+max+)
 		     (= 1 (SBIT ',(predicate-to-bv #'name-start-rune-p)
 				RUNE)))))
 	    (definline valid-name-p (rod)
