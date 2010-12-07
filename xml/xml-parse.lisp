@@ -3521,7 +3521,7 @@
                    (loop
                      (cond ((%= rptr fptr)
                             (setf (xstream-read-ptr ,input) rptr)
-                            (setf c (peek-rune input))
+                            (setf c (peek-rune ,input))
                             (cond ((eq c :eof)
                                    (return)))
                             (setf rptr (xstream-read-ptr ,input)
@@ -3562,19 +3562,19 @@
   (let ((input-var (gensym))
         (collect (gensym))
         (c (gensym)))
-    `(LET ((,input-var ,input))
-       (MULTIPLE-VALUE-BIND (,res ,res-start ,res-end)
-           (WITH-RUNE-COLLECTOR/RAW (,collect)
-             (LOOP
-               (LET ((,c (PEEK-RUNE ,input-var)))
-                 (COND ((EQ ,c :EOF)
+    `(let ((,input-var ,input))
+       (multiple-value-bind (,res ,res-start ,res-end)
+           (with-rune-collector/raw (,collect)
+             (loop
+               (let ((,c (peek-rune ,input-var)))
+                 (cond ((eq ,c :eof)
                         ;; xxx error message
-                        (RETURN))
-                       ((FUNCALL ,predicate ,c)
-                        (RETURN))
+                        (return))
+                       ((funcall ,predicate ,c)
+                        (return))
                        (t
                         (,collect ,c)
-                        (CONSUME-RUNE ,input-var))))))
+                        (consume-rune ,input-var))))))
          (LOCALLY
            ,@body)))))
 
